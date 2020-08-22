@@ -1,0 +1,31 @@
+name: 'Amazon ECS "Run Task Definition" Action for GitHub Actions'
+description: 'Run an Amazon ECS task definition on the same configuration as the existing ECS service.'
+branding:
+  icon: 'cloud'
+  color: 'orange'
+inputs:
+  task-definition:
+    description: 'The family and revision (family:revision) or full ARN of the task definition to run. If a revision is not specified, the latest ACTIVE revision is used.'
+    required: true
+  container:
+    description: 'The name of the container that receives the override.'
+    required: true
+  command:
+    description: "The list of command to run on ECS. Valid value is a JSON list format string."
+    required: true
+  service:
+    description: 'The name of the ECS service to use configuration.'
+    required: true
+  cluster:
+    description: "The name of the ECS service's cluster."
+    required: false
+    default: 'default'
+  wait-for-stopped:
+    description: 'Whether to wait for the ECS task to stopped state after starting the new task. Valid value is "true". Will default to not waiting.'
+    required: false
+outputs:
+  task-arn:
+    description: 'The ARN of the started ECS task'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
