@@ -54,7 +54,7 @@ async function run() {
     const taskArn = taskResponse.tasks[0].taskArn;
     core.setOutput('task-arn', taskArn);
     const taskId = taskArn.split('/').pop();
-    core.info(`Task started. Watch this task's details in the Amazon ECS console: https://console.aws.amazon.com/ecs/home?${aws.config.region}#/clusters/apps/tasks/${taskId}/details`);
+    core.info(`Task started. Watch this task's details in the Amazon ECS console: https://console.aws.amazon.com/ecs/home?${aws.config.region}#/clusters/${cluster}/tasks/${taskId}/details`);
 
     // Wait for the task to stop
     if (waitForStopped && waitForStopped.toLowerCase() === 'true') {

@@ -102,7 +102,7 @@ describe('Run a task', () => {
         });
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-arn', 'arn:aws:ecs:fake-region:123456789012:task/01234-abcd');
         expect(mockEcsWaiter).toHaveBeenCalledTimes(0);
-        expect(core.info).toBeCalledWith("Task started. Watch this task's details in the Amazon ECS console: https://console.aws.amazon.com/ecs/home?fake-region#/clusters/apps/tasks/01234-abcd/details");
+        expect(core.info).toBeCalledWith("Task started. Watch this task's details in the Amazon ECS console: https://console.aws.amazon.com/ecs/home?fake-region#/clusters/cluster-789/tasks/01234-abcd/details");
     });
 
     test('run a task definition, waits for stopped state', async () => {
@@ -143,6 +143,6 @@ describe('Run a task', () => {
         });
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-arn', 'arn:aws:ecs:fake-region:123456789012:task/01234-abcd');
         expect(mockEcsWaiter).toHaveBeenCalledTimes(1);
-        expect(core.info).toBeCalledWith("Task started. Watch this task's details in the Amazon ECS console: https://console.aws.amazon.com/ecs/home?fake-region#/clusters/apps/tasks/01234-abcd/details");
+        expect(core.info).toBeCalledWith("Task started. Watch this task's details in the Amazon ECS console: https://console.aws.amazon.com/ecs/home?fake-region#/clusters/cluster-789/tasks/01234-abcd/details");
     });
 });
