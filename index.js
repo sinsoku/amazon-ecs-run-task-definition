@@ -1,6 +1,16 @@
 const core = require('@actions/core');
 const aws = require('aws-sdk');
 
+function parseCommand(command) {
+  // for backwards compatibility
+  if (command[0] === '[') {
+    return JSON.parse(command);
+  }
+
+  const separator = command.includes("\n") ? "\n" : " ";
+  return command.split(separator).map(s => s.trim());
+}
+
 async function run() {
   try {
     const ecs = new aws.ECS({
@@ -32,7 +42,7 @@ async function run() {
     // Starts a new task
     let taskResponse;
     try {
-      const commandList = JSON.parse(command);
+      const commandList = parseCommand(command);
       taskResponse = await ecs.runTask({
         cluster: cluster,
         taskDefinition: taskDefinition,
@@ -78,7 +88,7 @@ async function run() {
   }
 }
 
-module.exports = run;
+module.exports = { run, parseCommand };
 
 /* istanbul ignore next */
 if (require.main === module) {

@@ -1,4 +1,4 @@
-const run = require('.');
+const { run, parseCommand } = require('.');
 const core = require('@actions/core');
 
 jest.mock('@actions/core');
@@ -181,4 +181,21 @@ describe('Run a task', () => {
 
         expect(core.setFailed).toBeCalledWith("The exit code was 1 in the container.");
     });
+});
+
+describe('parseCommand', () => {
+  test('JSON list format string', () => {
+    const actual = parseCommand('["echo", "Hello, World"]');
+    expect(actual).toEqual(["echo", "Hello, World"]);
+  });
+
+  test('string', () => {
+    const actual = parseCommand('echo foo');
+    expect(actual).toEqual(["echo", "foo"]);
+  });
+
+  test('string including \n', () => {
+    const actual = parseCommand("echo\n  'Hello, World'");
+    expect(actual).toEqual(["echo", "'Hello, World'"]);
+  });
 });

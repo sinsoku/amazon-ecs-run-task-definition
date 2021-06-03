@@ -11,7 +11,7 @@ inputs:
     description: 'The name of the container that receives the override.'
     required: true
   command:
-    description: "The list of command to run on ECS. Valid value is a JSON list format string."
+    description: "The list of command to run on ECS."
     required: true
   service:
     description: 'The name of the ECS service to use configuration.'

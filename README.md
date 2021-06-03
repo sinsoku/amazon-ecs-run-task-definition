@@ -10,7 +10,9 @@ Run an Amazon ECS task definition on the same configuration as the existing ECS 
       with:
         task-definition: foo:1
         container: my-container
-        command: '["echo", "Hello, World"]'
+        command: |
+          echo
+          "Hello, World"
         service: my-service
         cluster: my-cluster
         wait-for-stopped: true
