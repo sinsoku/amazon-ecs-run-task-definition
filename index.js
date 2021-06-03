@@ -2,6 +2,8 @@ const core = require('@actions/core');
 const aws = require('aws-sdk');
 
 async function run() {
+  core.info(`aws.VERSION: ${aws.VERSION}`);
+
   try {
     const ecs = new aws.ECS({
       customUserAgent: 'amazon-ecs-run-task-definition-for-github-actions'
