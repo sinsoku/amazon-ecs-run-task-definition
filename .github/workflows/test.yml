@@ -21,7 +21,7 @@ jobs:
       with:
         task-definition: nginx
         container: web
-        command: '["bad-command"]'
+        command: '["echo","hello"]'
         service: web
         cluster: default
         wait-for-stopped: true
