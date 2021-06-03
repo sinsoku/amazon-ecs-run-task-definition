@@ -63,14 +63,6 @@ describe('Run a task', () => {
                 }
             };
         });
-
-        mockEcsWaiter.mockImplementation(() => {
-            return {
-                promise() {
-                    return Promise.resolve({});
-                }
-            };
-        });
     });
 
     test('run a task definition', async () => {
@@ -105,7 +97,21 @@ describe('Run a task', () => {
         expect(core.info).toBeCalledWith("Task started. Watch this task's details in the Amazon ECS console: https://console.aws.amazon.com/ecs/home?fake-region#/clusters/cluster-789/tasks/01234-abcd/details");
     });
 
-    test('run a task definition, waits for stopped state', async () => {
+    test('run a task, waits for stopped state', async () => {
+        mockEcsWaiter.mockImplementation(() => {
+            return {
+                promise() {
+                    return Promise.resolve({
+                        tasks: [{
+                          containers: [{
+                            exitCode: 0
+                          }]
+                        }]
+                    });
+                }
+            };
+        });
+
         core.getInput = jest
             .fn()
             .mockReturnValueOnce('task:1')                   // task-definition
@@ -116,6 +122,7 @@ describe('Run a task', () => {
             .mockReturnValueOnce('TRUE');                    // wait-for-stopped
 
         await run();
+
         expect(core.setFailed).toHaveBeenCalledTimes(0);
         expect(mockEcsDescribeServices).toHaveBeenNthCalledWith(1, {
             cluster: 'cluster-789',
@@ -144,5 +151,34 @@ describe('Run a task', () => {
         expect(core.setOutput).toHaveBeenNthCalledWith(1, 'task-arn', 'arn:aws:ecs:fake-region:123456789012:task/01234-abcd');
         expect(mockEcsWaiter).toHaveBeenCalledTimes(1);
         expect(core.info).toBeCalledWith("Task started. Watch this task's details in the Amazon ECS console: https://console.aws.amazon.com/ecs/home?fake-region#/clusters/cluster-789/tasks/01234-abcd/details");
+    });
+
+    test('run a task, but failed', async () => {
+        mockEcsWaiter.mockImplementation(() => {
+            return {
+                promise() {
+                    return Promise.resolve({
+                        tasks: [{
+                          containers: [{
+                            exitCode: 1
+                          }]
+                        }]
+                    });
+                }
+            };
+        });
+
+        core.getInput = jest
+            .fn()
+            .mockReturnValueOnce('task:1')                   // task-definition
+            .mockReturnValueOnce('container-123')            // container
+            .mockReturnValueOnce('["bad-command"]')          // command
+            .mockReturnValueOnce('service-456')              // service
+            .mockReturnValueOnce('cluster-789')              // cluster
+            .mockReturnValueOnce('TRUE');                    // wait-for-stopped
+
+        await run();
+
+        expect(core.setFailed).toBeCalledWith("The exit code was 1 in the container.");
     });
 });

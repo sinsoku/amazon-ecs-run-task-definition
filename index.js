@@ -58,10 +58,16 @@ async function run() {
 
     // Wait for the task to stop
     if (waitForStopped && waitForStopped.toLowerCase() === 'true') {
-      await ecs.waitFor('tasksStopped', {
+      const waitResponse = await ecs.waitFor('tasksStopped', {
         cluster: cluster,
         tasks: [taskArn]
       }).promise();
+
+      const task = waitResponse.tasks[0];
+      const failedContainer = task.containers.find(c => c.exitCode != 0);
+      if (failedContainer) {
+        core.setFailed(`The exit code was ${failedContainer.exitCode} in the container.`);
+      }
     } else {
       core.debug('Not waiting for the task to stop');
     }
