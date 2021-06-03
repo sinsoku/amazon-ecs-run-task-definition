@@ -1,0 +1,30 @@
+name: Test
+
+on: push
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-1
+
+    - name: Run task
+      uses: sinsoku/amazon-ecs-run-task-definition@test
+      id: run-task
+      with:
+        task-definition: nginx
+        container: web
+        command: '["bad-command"]'
+        service: web
+        cluster: default
+        wait-for-stopped: true
+
+    - name: Get the output
+      run: echo "TaskArn ${{ steps.run-task.outputs.task-arn }}"
