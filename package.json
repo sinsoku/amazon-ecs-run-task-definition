@@ -26,7 +26,8 @@
   "homepage": "https://github.com/sinsoku/amazon-ecs-run-task-definition#readme",
   "dependencies": {
     "@actions/core": "^1.2.4",
-    "aws-sdk": "^2.735.0"
+    "aws-sdk": "^2.735.0",
+    "package.json": "^2.0.1"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.22.3",

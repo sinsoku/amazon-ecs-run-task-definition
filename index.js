@@ -44,7 +44,7 @@ async function run() {
     try {
       const commandList = parseCommand(command);
       taskResponse = await ecs.runTask({
-        capacityProviderStrategy: serviceResponse.capacityProviderStrategy,
+        //capacityProviderStrategy: serviceResponse.capacityProviderStrategy,
         cluster: cluster,
         taskDefinition: taskDefinition,
         launchType: serviceResponse.launchType,
